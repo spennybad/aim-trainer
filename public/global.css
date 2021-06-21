@@ -1,0 +1,16 @@
+:root {
+    --color-transBlack: hsla(0, 0%, 0%, 0.2);
+    --color-accent: hsl(16, 100%, 50%);
+}
+
+*,
+::after,
+::before {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    font-size: 2em;
+}
