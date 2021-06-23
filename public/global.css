@@ -1,6 +1,12 @@
 :root {
     --color-transBlack: hsla(0, 0%, 0%, 0.2);
     --color-accent: hsl(16, 100%, 50%);
+
+    --shadow-light: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    --shadow-text: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+    --font-med: clamp(1em, 4vw, 8em);
+    --font-big: clamp(5em, 8vw, 15em);
 }
 
 *,
@@ -13,4 +19,16 @@
 
 p {
     font-size: 2em;
+}
+
+@keyframes shrink {
+    from {
+        transform: scale(1);
+        background-color: black;
+    }
+
+    to {
+        background-color:orangered;
+        transform: scale(0.05);
+    }
 }

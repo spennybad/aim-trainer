@@ -1,5 +1,7 @@
 <script>
     import GameInstance from './components/GameInstance.svelte';
+    import Socials from './components/Socials.svelte';
+
     import { fade } from 'svelte/transition';
 
     // If false -> not running, if true -> running.
@@ -21,8 +23,9 @@
 
 </script>
 
-<main on:exitGame={handleExitGame}>
+<main>
     {#if !gameState}
+        <Socials />
         <button transition:fade={{duration: 200}} class="centered start" on:click={startGame}>
             START
         </button>
@@ -43,7 +46,7 @@
     .start {
         height: auto;
         width: 20%;
-        font-size: 5em;
+        font-size: var(--font-big);
     }
 
     button {
