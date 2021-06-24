@@ -1,14 +1,22 @@
 <script>
+    import { Targets } from './stores/TargetsStore.js';
+    import { Hits } from './stores/HitsStore.js';
+    import { Misses } from './stores/MissesStore.js';
+
     import GameInstance from './components/GameInstance.svelte';
+    import GameResults from './components/GameResults.svelte';
     import Socials from './components/Socials.svelte';
 
     import GamemodeConfig from './utils/GamemodeConfig.js';
+    import { EndStatus } from './utils/EndStatus.js';
 
     import { fade } from 'svelte/transition';
 
     // If false -> not running, if true -> running.
     let gameState = false;
-    let selectedGamemode;
+    let selectedGamemode = "classic";
+    let showEndScreen = false;
+    let endGameStatus;
 
     function startGame() {
         gameState = true;
@@ -16,21 +24,41 @@
 
     function gameEnd(endStatus) {
         gameState = false;
+        if (endStatus.reason != "quit") {
+            showEndScreen = true;
+            endGameStatus = endStatus;
+        } else {
+            wipeGame();
+        }
     }
 
     function handleExitGame(event) {
+        // Handles Quiting game.
         if (event.key === "Escape" && gameState) {
-            gameEnd();
+            gameEnd(EndStatus("quit", "na"));
+        
+        // Handles closing end screen.
+        } else if (event.key === "Escape" && showEndScreen) {
+            wipeGame();
         }
+    }
+
+    function wipeGame() {
+        gameState = false;
+        showEndScreen = false;
+        endGameStatus = undefined;
+        Targets.set({});
+        Hits.set(0);
+        Misses.set(0);
     }
 
 </script>
 
 <main>
-    {#if !gameState}
+    {#if !gameState && !showEndScreen}
         <Socials />
         <div class="menu_wrapper centered">
-            <input type="radio" class="gamemode_selector" id="classic" bind:group={selectedGamemode} value={"classic"} checked>
+            <input type="radio" class="gamemode_selector" id="classic" bind:group={selectedGamemode} value={"classic"}>
             <label for="classic" class="gamemode_seclector_label">
                 Classic
             </label>
@@ -42,8 +70,14 @@
                 Furry
             </label>
         </div>
-    {:else}
+        <div id="gamemode_desc_wrapper">
+            <p><span>*Classic:</span> The game ends if you let a target disappear, points are deducted for mis-clicks.</p>
+            <p><span>*Furry:</span> The game ends when the timer runs out, points are deducted for allowing a target to disappear.</p>
+        </div>
+    {:else if gameState}
         <GameInstance config={selectedGamemode == "furry" ? GamemodeConfig.furry : GamemodeConfig.classic} endGame={gameEnd}/>
+    {:else}
+        <GameResults endTime={endGameStatus.endTime}/>
     {/if}
 </main>
 
@@ -102,17 +136,28 @@
     .gamemode_seclector_label {
         font-size: var(--font-med);
         transition: all .2s;
-        padding: .01em .2em;
+        padding: 0 .2em;
         border: .1em solid transparent;
     }
 
     .gamemode_seclector_label:hover {
-        border: .1em solid var(--color-accent);
+        border-bottom: .1em solid var(--color-accent);
     }
 
     .gamemode_selector:checked + label {
-        background-color: orangered;
-        color: white;
+        border: .1em solid var(--color-accent);
+        color:black;
+    }
+
+    #gamemode_desc_wrapper {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-size: var(--font-tiny);
+    }
+
+    #gamemode_desc_wrapper p span {
+        color: var(--color-accent);
     }
 
 </style>

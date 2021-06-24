@@ -36,17 +36,23 @@
     }, config.newTargetCooldown * 1000);
 
     async function waitToBeHidden(target, targetLifeSpan) {
+
         await timeout(targetLifeSpan * 1000);
+
         if ($Targets[target].hit == false) {
-            if (config.subtractOnMiss) Misses.update(s => s + 1);
+            
+            // Seconds condition in if insures that if the hide promise is resolved post end of game the target is not counted.
+            if (config.subtractOnMiss && ($Targets[target].num + ($Targets[target].lifespan * 1000) <= time)) Misses.update(s => s + 1);
             
             $Targets[target].hide = true;
 
             // Ends game if one is missed and the gamemode calls for the game to end.
-            if (config.endOnMiss) endGame(EndStatus("miss", config.name));
+            if (config.endOnMiss) {
+                endGame(EndStatus("miss", config.name, time))
+            };
 
         }
-    }
+     }
 
     function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -61,7 +67,7 @@
         } else if (coord - targetSize < 0) {
             coord += targetSize + 10;
         } else {
-            return coord;
+            return (coord/max) * 100;
         }
     }
 

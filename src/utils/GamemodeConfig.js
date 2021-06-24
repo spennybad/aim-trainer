@@ -4,9 +4,9 @@ const GamemodeConfig = {
         targetSize: () => {return 70},
         targetLifeSpan: () => {return 3},
         newTargetCooldown: .5,
-        roundTime: 60,
+        roundTime: 5,
         endOnMiss: false,
-        subtractOnMiss: false
+        subtractOnMiss: true
     },
     classic: {
         name: "classic",

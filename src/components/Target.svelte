@@ -22,8 +22,8 @@
             height: ${targetDetails.size}px;
             width: ${targetDetails.size}px;
             position: absolute; 
-            top: ${targetDetails.y}px; 
-            right: ${targetDetails.x}px;
+            top: ${targetDetails.y}%; 
+            right: ${targetDetails.x}%;
             animation: shrink ${targetDetails.lifespan}s;
         `}
     />

@@ -1,10 +1,7 @@
 <script>
 
     // Store Imports 
-    import { Targets } from '../stores/TargetsStore.js';
     import { TotalScore } from '../stores/TotalScore.js';
-    import { Hits } from '../stores/HitsStore.js';
-    import { Misses } from '../stores/MissesStore.js';
 
     // Animation Imports
     import { fade } from 'svelte/transition';
@@ -13,9 +10,6 @@
     import TargetWrapper from './TargetWrapper.svelte';
     import { onInterval } from '../utils/Utils.js';
     import { EndStatus } from '../utils/EndStatus.js';
-
-    // Lifecycle Imports
-    import { onDestroy } from 'svelte';
 
     // PROPS
     export let config;
@@ -33,19 +27,13 @@
     // Time tracker... every millisecond. Used to sync all app actions.
     onInterval(() => {
         time += 100;
-    }, 100)
-
-    onDestroy(() => {
-        Targets.set({});
-        Hits.set(0);
-        Misses.set(0);
-    })
+    }, 100);
 
     function getDisplayTime() {
         if (config.roundTime) {
             const displayTime = config.roundTime - Math.floor(time/1000);
             if (displayTime == 0) {
-                endGame(EndStatus("timeout", config.name));
+                endGame(EndStatus("timeout", config.name, time));
             }
             return config.roundTime - Math.floor(time/1000);
         } else {
@@ -80,6 +68,7 @@
         height: min-content;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         padding: 1rem;
+        font-size: var(--font-small);
     }
 
     #mouse_coords {
