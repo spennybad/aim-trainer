@@ -41,8 +41,8 @@
 
         if ($Targets[target].hit == false) {
             
-            // Seconds condition in if insures that if the hide promise is resolved post end of game the target is not counted.
-            if (config.subtractOnMiss && ($Targets[target].num + ($Targets[target].lifespan * 1000) <= time)) Misses.update(s => s + 1);
+            // Insures that if the hide promise is resolved post end of game the target is not counted.
+            if (config.subtractOnMiss && $Targets[target].num + ($Targets[target].lifespan * 1000) <= time + 100) Misses.update(s => s + 1);
             
             $Targets[target].hide = true;
 

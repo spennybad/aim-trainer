@@ -2,6 +2,7 @@
 
     // Store Imports 
     import { TotalScore } from '../stores/TotalScore.js';
+    import { Hits } from '../stores/HitsStore.js';
 
     // Animation Imports
     import { fade } from 'svelte/transition';
@@ -47,7 +48,7 @@
     <div id="hud_wrapper">
         <p class="end">Press "ESC" to end game.</p>
         <p id="timer"><span>Time = </span>{displayTime}</p>
-        <div class="centered score">{$TotalScore}</div>
+        <div class="centered score">{config.name == "furry" ? $Hits : $TotalScore}</div>
         <p id="mouse_coords">{mousecoords.x}, {mousecoords.y}</p>
     </div>
     <!-- To have logic added around for passing specific configs based on what config is active. -->

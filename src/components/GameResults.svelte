@@ -14,7 +14,7 @@
     <div id="data_wrapper">
         <div class="text">
             <p>Hits: <span>{$Hits}</span></p>
-            <p>Misses: <span>{$Misses}</span></p>
+            <p>Misclicks: <span>{$Misses}</span></p>
             <p>Final Score: <span>{$TotalScore}</span></p>
         </div>
         <div id="heatmap_wrapper">

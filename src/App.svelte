@@ -18,6 +18,11 @@
     let showEndScreen = false;
     let endGameStatus;
 
+    function getConfig() {
+        if (selectedGamemode === "furry") return GamemodeConfig.furry;
+        else if (selectedGamemode === "classic") return GamemodeConfig.classic;
+    }
+
     function startGame() {
         gameState = true;
     }
@@ -72,12 +77,12 @@
         </div>
         <div id="gamemode_desc_wrapper">
             <p><span>*Classic:</span> The game ends if you let a target disappear, points are deducted for mis-clicks.</p>
-            <p><span>*Furry:</span> The game ends when the timer runs out, points are deducted for allowing a target to disappear.</p>
+            <p><span>*Furry:</span> The game ends when the timer runs out, points are deducted for mis-clicking.</p>
         </div>
     {:else if gameState}
-        <GameInstance config={selectedGamemode == "furry" ? GamemodeConfig.furry : GamemodeConfig.classic} endGame={gameEnd}/>
+        <GameInstance config={getConfig(selectedGamemode)} endGame={gameEnd}/>
     {:else}
-        <GameResults endTime={endGameStatus.endTime}/>
+        <GameResults endTime={endGameStatus.endTime} config={getConfig(selectedGamemode)}/>
     {/if}
 </main>
 
