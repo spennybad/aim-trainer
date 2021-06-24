@@ -42,8 +42,8 @@
         transition: all .2s;
 
         cursor: pointer;
-        height: 3em;
-        width: 3em;
+        height: 4em;
+        width: 4em;
     }
 
     li:hover {

@@ -6,10 +6,13 @@
     import { Misses }from '../stores/MissesStore.js';
     import { Hits } from '../stores/HitsStore.js';
     import { Targets } from '../stores/TargetsStore.js';
+    import { EndStatus } from '../utils/EndStatus.js';
 
     // PROPS
     export let time;
     export let config;
+
+    export let endGame;
 
     // Object which stores the coordinate range which targets can spawn in without clipping off screen.
     let w;
@@ -17,21 +20,31 @@
     
     onInterval(() => {
 
+        const targetSize = config.targetSize();
+        const targetLifeSpan = config.targetLifeSpan();
+
         $Targets[time] = {
             num: time, 
-            x: getCoord(w, config.targetSize), 
-            y: getCoord(h, config.targetSize),
+            x: getCoord(w, targetSize), 
+            y: getCoord(h, targetSize),
+            size: targetSize,
+            lifespan: targetLifeSpan,
             hit: false,
-            hide: waitToBeHidden(time).catch((error) => console.log("Game quit by player."))
+            hide: waitToBeHidden(time, targetLifeSpan).catch((error) => console.log("Game quit by player."))
         };
 
     }, config.newTargetCooldown * 1000);
 
-    async function waitToBeHidden(target) {
-        await timeout(config.targetTiming * 1000);
-        if ($Targets[target].hit != true) {
-            Misses.update(s => s + 1);
+    async function waitToBeHidden(target, targetLifeSpan) {
+        await timeout(targetLifeSpan * 1000);
+        if ($Targets[target].hit == false) {
+            if (config.subtractOnMiss) Misses.update(s => s + 1);
+            
             $Targets[target].hide = true;
+
+            // Ends game if one is missed and the gamemode calls for the game to end.
+            if (config.endOnMiss) endGame(EndStatus("miss", config.name));
+
         }
     }
 
@@ -41,12 +54,12 @@
 
     // Genetates a random coordinate and insures that it is valid.
     // The "+10" acts as a border of 10
-    const getCoord = (max) => {
+    const getCoord = (max, targetSize) => {
         let coord = Math.floor(Math.random() * max);
-        if (coord + config.targetSize > max) {
-            coord -= config.targetSize + 10;
-        } else if (coord - config.targetSize < 0) {
-            coord += config.targetSize + 10;
+        if (coord + targetSize > max) {
+            coord -= targetSize + 10;
+        } else if (coord - targetSize < 0) {
+            coord += targetSize + 10;
         } else {
             return coord;
         }
@@ -70,7 +83,7 @@
     <div id="miss_detector" on:click={handleTargetMiss}/>
     {#each Object.keys($Targets) as target}
         {#if $Targets[target].hide != true}
-            <Target on:hit={handleTargetHit} targetDetails={$Targets[target]} config={config}/>
+            <Target on:hit={handleTargetHit} targetDetails={$Targets[target]} />
         {/if}
     {/each}
 </div>

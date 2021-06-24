@@ -5,7 +5,6 @@
 
     // PROPS
     export let targetDetails;
-    export let config;
 
     const dispatch = createEventDispatcher();
     
@@ -20,12 +19,12 @@
         class="target" 
         on:click={handleTargetHit} 
         style={`
-            height: ${config.targetSize}px;
-            width: ${config.targetSize}px;
+            height: ${targetDetails.size}px;
+            width: ${targetDetails.size}px;
             position: absolute; 
             top: ${targetDetails.y}px; 
             right: ${targetDetails.x}px;
-            animation: shrink ${config.targetTiming}s;
+            animation: shrink ${targetDetails.lifespan}s;
         `}
     />
 {/if}
