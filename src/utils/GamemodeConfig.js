@@ -4,7 +4,7 @@ const GamemodeConfig = {
         targetSize: () => {return 70},
         targetLifeSpan: () => {return 3},
         newTargetCooldown: .5,
-        roundTime: 5,
+        roundTime: 60,
         endOnMiss: false,
         subtractOnMiss: false,
     },
