@@ -12,6 +12,8 @@
 
     // If false -> not running, if true -> running.
     let gameState = false;
+
+    // Default Gamemode == Classic
     let selectedGamemode = "classic";
 
     function getConfig() {
@@ -25,6 +27,7 @@
     }
 
     function wipeGame() {
+
         // Clear all timeouts once the game has ended.
         Object.keys($Targets).forEach(target => {
             clearTimeout($Targets[target].hide);
@@ -124,6 +127,7 @@
         transition: all .2s;
         padding: 0 .2em;
         border: .1em solid transparent;
+        cursor: pointer;
     }
 
     .gamemode_seclector_label:hover {

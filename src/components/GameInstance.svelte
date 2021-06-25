@@ -2,7 +2,6 @@
 
     // Store Imports 
     import { TotalScore } from '../stores/TotalScore.js';
-    import { Hits } from '../stores/HitsStore.js';
     import { Targets } from '../stores/TargetsStore.js';
 
     // Animation Imports
