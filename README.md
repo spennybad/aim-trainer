@@ -1,4 +1,5 @@
-# Svelte Aim Trainer
+# Svelte Aim Trainer 🎯
+Click [Here](aim-trainer.vercel.app) to play!
 ### Hello! 
 
 I made this project to learn Svelte. The code base over uses svelte features on purpose. In specific places it would have been simpler to utilize vanilla JS features, however, in the spirit of learning I opted for the "Sveltiest" solution.
