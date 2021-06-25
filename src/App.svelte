@@ -4,63 +4,49 @@
     import { Misses } from './stores/MissesStore.js';
 
     import GameInstance from './components/GameInstance.svelte';
-    import GameResults from './components/GameResults.svelte';
     import Socials from './components/Socials.svelte';
 
     import GamemodeConfig from './utils/GamemodeConfig.js';
-    import { EndStatus } from './utils/EndStatus.js';
 
     import { fade } from 'svelte/transition';
 
     // If false -> not running, if true -> running.
     let gameState = false;
     let selectedGamemode = "classic";
-    let showEndScreen = false;
-    let endGameStatus;
 
     function getConfig() {
-        if (selectedGamemode === "furry") return GamemodeConfig.furry;
+        if (selectedGamemode === "fury") return GamemodeConfig.fury;
         else if (selectedGamemode === "classic") return GamemodeConfig.classic;
     }
 
     function startGame() {
+        wipeGame();
         gameState = true;
     }
 
-    function gameEnd(endStatus) {
-        gameState = false;
-        if (endStatus.reason != "quit") {
-            showEndScreen = true;
-            endGameStatus = endStatus;
-        } else {
-            wipeGame();
-        }
-    }
-
-    function handleExitGame(event) {
-        // Handles Quiting game.
-        if (event.key === "Escape" && gameState) {
-            gameEnd(EndStatus("quit", "na"));
-        
-        // Handles closing end screen.
-        } else if (event.key === "Escape" && showEndScreen) {
-            wipeGame();
-        }
-    }
-
     function wipeGame() {
-        gameState = false;
-        showEndScreen = false;
-        endGameStatus = undefined;
+        // Clear all timeouts once the game has ended.
+        Object.keys($Targets).forEach(target => {
+            clearTimeout($Targets[target].hide);
+        });
+
         Targets.set({});
         Hits.set(0);
         Misses.set(0);
     }
 
+    function handleCloseScreen(event) {
+        // Handles Quiting game.
+        if (event.key === "Escape" && gameState) {
+            wipeGame();
+            gameState = false;
+        }
+    }
+
 </script>
 
 <main>
-    {#if !gameState && !showEndScreen}
+    {#if !gameState}
         <Socials />
         <div class="menu_wrapper centered">
             <input type="radio" class="gamemode_selector" id="classic" bind:group={selectedGamemode} value={"classic"}>
@@ -70,23 +56,22 @@
             <button type="submit" transition:fade={{duration: 200}} class="start" on:click={startGame}>
                 START
             </button>
-            <input type="radio" class="gamemode_selector" id="furry" bind:group={selectedGamemode} value={"furry"}>
-            <label for="furry" class="gamemode_seclector_label">
-                Furry
+            <input type="radio" class="gamemode_selector" id="fury" bind:group={selectedGamemode} value={"fury"}>
+            <label for="fury" class="gamemode_seclector_label">
+                fury
             </label>
         </div>
         <div id="gamemode_desc_wrapper">
             <p><span>*Classic:</span> The game ends if you let a target disappear, points are deducted for mis-clicks.</p>
-            <p><span>*Furry:</span> The game ends when the timer runs out, points are deducted for mis-clicking.</p>
+            <p><span>*fury:</span> The game ends when the timer runs out, points are deducted for mis-clicking.</p>
         </div>
-    {:else if gameState}
-        <GameInstance config={getConfig(selectedGamemode)} endGame={gameEnd}/>
     {:else}
-        <GameResults endTime={endGameStatus.endTime} config={getConfig(selectedGamemode)}/>
+        <GameInstance config={getConfig(selectedGamemode)}/>
     {/if}
 </main>
 
-<svelte:window on:keydown={handleExitGame}/>
+<!-- Listener for force quit event. -->
+<svelte:window on:keydown={handleCloseScreen}/>
 
 <style>
 
@@ -121,16 +106,12 @@
         align-items: center;
     }
 
-    
     @media only screen and (max-width: 800px) {
 
         .menu_wrapper {
-            display: grid;
             width: 100%;
             grid-template-columns: none;
             grid-template-rows: repeat(3, 1fr);
-            justify-items: center;
-            align-items: center;
         }
     }
 

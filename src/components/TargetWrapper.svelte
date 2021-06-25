@@ -6,7 +6,7 @@
     import { Misses }from '../stores/MissesStore.js';
     import { Hits } from '../stores/HitsStore.js';
     import { Targets } from '../stores/TargetsStore.js';
-    import { EndStatus } from '../utils/EndStatus.js';
+    import { EndState } from '../utils/EndState.js';
 
     // PROPS
     export let time;
@@ -30,32 +30,27 @@
             size: targetSize,
             lifespan: targetLifeSpan,
             hit: false,
-            hide: waitToBeHidden(time, targetLifeSpan).catch((error) => console.log("Game quit by player."))
+            hide: waitToBeHidden(time, targetLifeSpan)
         };
 
     }, config.newTargetCooldown * 1000);
 
-    async function waitToBeHidden(target, targetLifeSpan) {
+    function waitToBeHidden(target, targetLifeSpan) {
 
-        await timeout(targetLifeSpan * 1000);
+        return setTimeout(() => {
+            if ($Targets[target].hit == false) {
+                
+                // Insures that if the hide promise is resolved post end of game the target is not counted.
+                if (config.subtractOnMiss) Misses.update(s => s + 1);
+                
+                $Targets[target].hide = true;
 
-        if ($Targets[target].hit == false) {
-            
-            // Insures that if the hide promise is resolved post end of game the target is not counted.
-            if (config.subtractOnMiss && $Targets[target].num + ($Targets[target].lifespan * 1000) <= time + 100) Misses.update(s => s + 1);
-            
-            $Targets[target].hide = true;
-
-            // Ends game if one is missed and the gamemode calls for the game to end.
-            if (config.endOnMiss) {
-                endGame(EndStatus("miss", config.name, time))
-            };
-
-        }
-     }
-
-    function timeout(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+                // Ends game if one is missed and the gamemode calls for the game to end.
+                if (config.endOnMiss) {
+                    endGame(EndState("miss", config.name, time))
+                };
+            }
+        }, targetLifeSpan * 1000);
     }
 
     // Genetates a random coordinate and insures that it is valid.

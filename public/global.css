@@ -11,10 +11,9 @@
     --shadow-text: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
     --font-tiny: clamp(.8em, 1vw, 3em);
-    --font-small: clamp(2em, 3vw, 5em);
+    --font-small: clamp(1.5em, 3vw, 5em);
     --font-med: clamp(2em, 3vw, 8em);
-    --font-big: clamp(5em, 8vw, 15em);
-    
+    --font-big: clamp(5em, 8vw, 15em);   
 }
 
 *,
@@ -24,10 +23,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-::-webkit-scrollbar {
-    display: none;
 }
 
 @keyframes shrink {

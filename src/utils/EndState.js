@@ -1,4 +1,4 @@
-export function EndStatus(reason, gamemode, time) {
+export function EndState(reason, gamemode, time) {
     return {
         gamemode: gamemode,
         reason: reason,

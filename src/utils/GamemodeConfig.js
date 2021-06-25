@@ -1,10 +1,10 @@
 const GamemodeConfig = {
-    furry: {
-        name: "furry",
+    fury: {
+        name: "fury",
         targetSize: () => {return 70},
         targetLifeSpan: () => {return 3},
         newTargetCooldown: .5,
-        roundTime: 60,
+        roundTime: 5,
         endOnMiss: false,
         subtractOnMiss: false,
     },
@@ -18,7 +18,7 @@ const GamemodeConfig = {
         },
         newTargetCooldown: 1,
         endOnMiss: true,
-        subtractOnMiss: true,
+        subtractOnMiss: false,
     }
     
 }
